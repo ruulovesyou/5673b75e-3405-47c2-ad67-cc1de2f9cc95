@@ -1,0 +1,2319 @@
+ --newtestdummy?
+ 
+if not game:IsLoaded() then
+        game.Loaded:Wait()
+end
+local Rayfield = loadstring(game:HttpGet('https://pastebin.com/raw/mCbitnGK'))()
+
+local Window = Rayfield:CreateWindow({
+        Name = "Magnate v1.0",
+        Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+        LoadingTitle = "Magnate",
+        LoadingSubtitle = "by Zrno",
+        Theme = {
+            TextColor = Color3.fromRGB(255, 255, 255),  -- White text color
+
+            Background = Color3.fromRGB(15, 15, 15),     -- Dark matte background
+            Topbar = Color3.fromRGB(25, 25, 25),         -- Slightly lighter dark for the top bar
+            Shadow = Color3.fromRGB(10, 10, 10),         -- Dark shadow for subtle depth
+
+            NotificationBackground = Color3.fromRGB(15, 15, 15), -- Dark notification background
+            NotificationActionsBackground = Color3.fromRGB(200, 200, 200), -- Light gray for notification actions
+
+            TabBackground = Color3.fromRGB(50, 50, 50),    -- Matte black tab background
+            TabStroke = Color3.fromRGB(60, 60, 60),        -- Dark border for tabs
+            TabBackgroundSelected = Color3.fromRGB(70, 70, 70),  -- Slightly lighter selected tab background
+            TabTextColor = Color3.fromRGB(255, 255, 255),   -- White text for the tab
+            SelectedTabTextColor = Color3.fromRGB(255, 255, 255), -- White text for selected tab
+
+            ElementBackground = Color3.fromRGB(25, 25, 25),   -- Darker background for elements
+            ElementBackgroundHover = Color3.fromRGB(35, 35, 35), -- Slightly lighter hover effect
+            SecondaryElementBackground = Color3.fromRGB(15, 15, 15), -- Darkest secondary element background
+            ElementStroke = Color3.fromRGB(40, 40, 40),       -- Dark border for elements
+            SecondaryElementStroke = Color3.fromRGB(30, 30, 30), -- Lighter border for secondary elements
+
+            SliderBackground = Color3.fromRGB(50, 138, 220),   -- Keep slider color as it is
+            SliderProgress = Color3.fromRGB(50, 138, 220),     -- Keep slider progress color as it is
+            SliderStroke = Color3.fromRGB(58, 163, 255),       -- Keep slider stroke color as it is
+
+            ToggleBackground = Color3.fromRGB(25, 25, 25),     -- Dark background for toggle
+            ToggleEnabled = Color3.fromRGB(0, 146, 214),       -- Bright blue when enabled
+            ToggleDisabled = Color3.fromRGB(80, 80, 80),       -- Lighter gray when disabled
+            ToggleEnabledStroke = Color3.fromRGB(0, 170, 255), -- Bright blue stroke when enabled
+            ToggleDisabledStroke = Color3.fromRGB(100, 100, 100), -- Gray stroke when disabled
+            ToggleEnabledOuterStroke = Color3.fromRGB(60, 60, 60), -- Dark outer stroke when enabled
+            ToggleDisabledOuterStroke = Color3.fromRGB(50, 50, 50), -- Dark outer stroke when disabled
+
+            DropdownSelected = Color3.fromRGB(40, 40, 40),    -- Dark background for selected dropdown
+            DropdownUnselected = Color3.fromRGB(25, 25, 25),  -- Dark background for unselected dropdown
+
+            InputBackground = Color3.fromRGB(25, 25, 25),     -- Dark input background
+            InputStroke = Color3.fromRGB(60, 60, 60),         -- Dark stroke around the input
+            PlaceholderColor = Color3.fromRGB(180, 180, 180)  -- Light gray for placeholder text
+        },
+
+        DisableRayfieldPrompts = true,
+        DisableBuildWarnings = true, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+        ConfigurationSaving = {
+            Enabled = true,
+            FolderName = "Magnate", -- Create a custom folder for your hub/game
+            FileName = "Magnate Hub"
+        },
+
+        Discord = {
+            Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+            Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+            RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+        },
+
+        KeySystem = false, -- Set this to true to use our key system
+        KeySettings = {
+            Title = "Untitled",
+            Subtitle = "Key System",
+            Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+            FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+            SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+            GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+            Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+        }
+})
+
+local MAINIconID =  10734982144
+local TOGGLESIconID = 10723416527
+local SHOPSIconID = 10734952479
+local PLAYERSIconID = 10723396107
+local mainNotification = 10709775560
+
+--MAIN TAB
+local MainTab = Window:CreateTab("Main", MAINIconID)
+
+
+MainTab:CreateButton({Name = "Refresh Character", Callback = function() 
+
+
+Rayfield:Notify({Title = "Notification Title", Content = "Notification Content", Duration = 6.5, Image = mainNotification})
+
+
+
+end})
+
+
+MainTab:CreateSection("Trader")
+	-- 📦 Services
+local RunService = game:GetService("RunService")
+
+-- 🗃️ Trader data
+local trades = {
+	{ YouGive = { OreName = "Cobalt", Quantity = 10 }, YouGet = { OreName = "Iridium", Quantity = 2 } },
+	{ YouGive = { OreName = "Uranium", Quantity = 5 }, YouGet = { OreName = "Radiant Quartz", Quantity = 1 } },
+	{ YouGive = { OreName = "Obscurite", Quantity = 3 }, YouGet = { OreName = "Lunaris", Quantity = 1 } },
+	{ YouGive = { OreName = "Lunaris", Quantity = 1 }, YouGet = { OreName = "Obscurite", Quantity = 3 } },
+	{ YouGive = { OreName = "Stellarite", Quantity = 1 }, YouGet = { OreName = "Elerium", Quantity = 2 } },
+	{ YouGive = { OreName = "Voidstone", Quantity = 3 }, YouGet = { OreName = "Glacium", Quantity = 1 } },
+	-- Truncated for brevity, continue with remaining trades...
+}
+
+-- 🧠 Utility
+local function getSeed()
+	local t = os.date("!*t")
+	t.min, t.sec = 0, 0
+	return os.time(t)
+end
+
+local function getTraderItems()
+	math.randomseed(getSeed())
+	local selected, used = {}, {}
+	while #selected < 3 do
+		local idx = math.random(1, #trades)
+		if not used[idx] then
+			table.insert(selected, trades[idx])
+			used[idx] = true
+		end
+	end
+	return selected
+end
+
+local function getTimeLeft()
+	local now = os.time(os.date("!*t"))
+	return ((now - now % 3600) + 3600) - now
+end
+
+local function formatTime(s)
+	return string.format("%02d:%02d", math.floor(s / 60), s % 60)
+end
+
+local function getNow()
+	local t = os.date("!*t")
+	return string.format("[%02d:%02d:%02d UTC]", t.hour, t.min, t.sec)
+end
+
+local function printTraderList()
+	local offers = getTraderItems()
+	print("📋 Current Trader Offers:")
+	for i, tr in ipairs(offers) do
+		print(string.format("📦 #%d: %d x %s ➜ %d x %s", i,
+			tr.YouGive.Quantity, tr.YouGive.OreName,
+			tr.YouGet.Quantity, tr.YouGet.OreName
+		))
+	end
+end
+
+-- 🔁 State
+local traderShouldRun = false
+local traderCooldown = false
+local lastSeed = getSeed()
+local lastTick = 0
+local lastPrinted = false
+
+-- 🔂 Loop
+local function traderLoopStep()
+	if not traderShouldRun then return end
+
+	local now = os.clock()
+	if now - lastTick >= 5 then
+		lastTick = now
+
+		local seed = getSeed()
+		local timeLeft = getTimeLeft()
+
+		if seed > lastSeed and not traderCooldown then
+			lastSeed = seed
+			traderCooldown = true
+			lastPrinted = false
+
+			print("\n🔁 " .. getNow() .. " New Trader Cycle Detected!")
+			printTraderList()
+
+			task.delay(5, function()
+				traderCooldown = false
+			end)
+		end
+
+		print("⏲️ " .. getNow() .. " Timer: " .. formatTime(timeLeft))
+		if not lastPrinted and timeLeft > 60 then
+			print("⏲️ " .. getNow() .. " Timer: " .. formatTime(timeLeft))
+			print("⌛ Timer still running, not refreshed yet.")
+			lastPrinted = true
+		end
+	end
+end
+
+-- ✅ Loop control
+local traderConn = nil
+local function startTraderLoop()
+	if traderConn then traderConn:Disconnect() end
+	traderConn = RunService.Heartbeat:Connect(traderLoopStep)
+end
+
+local function stopTraderLoop()
+	if traderConn then traderConn:Disconnect() end
+	traderConn = nil
+end
+
+-- 🔘 Toggle
+local traderToggle = MainTab:CreateToggle({
+	Name = "Auto Check Trader",
+	CurrentValue = false,
+	Flag = "CheckTrader",
+	Callback = function(enabled)
+		traderShouldRun = enabled
+		if enabled then
+			print("🟢 Trader Auto-Check ENABLED")
+			printTraderList()
+			startTraderLoop()
+		else
+			print("🔴 Trader Auto-Check DISABLED")
+			stopTraderLoop()
+		end
+	end,
+})
+
+-- ♻️ Restore on GUI re-exec
+task.defer(function()
+	local saved = Rayfield.Flags["CheckTrader"]
+	if saved and saved.CurrentValue then
+		print("♻️ Restoring Trader Toggle (saved ON)")
+		traderShouldRun = true
+		traderToggle:Set(true)
+		printTraderList()
+		startTraderLoop()
+	end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 📦 Services
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+-- 🙋 Player
+local LocalPlayer = Players.LocalPlayer
+
+-- 🧠 State & Flags
+local HIDDEN_MARKER_NAME = "Client_Hidden_Marker"
+local hidingSystemReady = false
+local hidingEnabled = false
+local toggleBusy = false
+local hideLoopConnection = nil
+
+local hiddenPlots = {}
+local monitoredPlots = {}
+local effectsHidden = {}
+local activeConnections = {}
+
+-- ⚙️ Safe property setter
+local function setHiddenPropertySafe(obj, prop, val)
+	local setter = sethiddenproperty or set_hidden_property or set_hidden_prop
+	if setter then pcall(function() setter(obj, prop, val) end) end
+end
+
+-- 🌫️ Effect check utility
+local function isEffect(obj)
+	return obj:IsA("ParticleEmitter") or obj:IsA("Beam") or obj:IsA("Trail")
+		or obj:IsA("PointLight") or obj:IsA("SurfaceLight") or obj:IsA("SpotLight") or obj:IsA("Smoke")
+end
+
+local function isVisual(obj)
+	return obj:IsA("Texture") or obj:IsA("Decal") or obj:IsA("SurfaceAppearance") or isEffect(obj)
+end
+
+-- ✅ Disconnect safely
+local function safeDisconnect(conn)
+	if conn and typeof(conn) == "Instance" and conn.Disconnect then
+		pcall(function() conn:Disconnect() end)
+	end
+end
+
+-- ✅ Clean orphaned references
+local function cleanOrphans()
+	for plot in pairs(hiddenPlots) do
+		if not plot:IsDescendantOf(Workspace) then
+			hiddenPlots[plot] = nil
+		end
+	end
+	local valid = {}
+	for _, eff in ipairs(effectsHidden) do
+		if eff and typeof(eff) == "Instance" and eff:IsDescendantOf(Workspace) then
+			table.insert(valid, eff)
+		end
+	end
+	effectsHidden = valid
+end
+
+-- 🛠️ Wait for drills/tools to load
+local function waitForFullLoad(plot, player, timeout)
+	timeout = timeout or 10
+	local start = tick()
+	local drillsFolder = plot:FindFirstChild("Drills")
+	if not drillsFolder then return false end
+
+	while player and player:IsDescendantOf(Players) do
+		local backpack = player:FindFirstChild("Backpack")
+		if backpack and #backpack:GetChildren() > 0 then break end
+		if tick() - start > timeout then return false end
+		task.wait(0.3)
+	end
+
+	while drillsFolder and #drillsFolder:GetChildren() == 0 do
+		if tick() - start > timeout then return false end
+		task.wait(0.3)
+	end
+
+	return true
+end
+
+-- 🕵️ Hide one plot
+local function hidePlot(plot)
+	if not hidingSystemReady or not hidingEnabled then return end
+	if hiddenPlots[plot] or plot:FindFirstChild(HIDDEN_MARKER_NAME) then return end
+
+	local marker = Instance.new("BoolValue")
+	marker.Name = HIDDEN_MARKER_NAME
+	marker.Parent = plot
+
+	hiddenPlots[plot] = true
+	local ownerObj = plot:FindFirstChild("Owner")
+	local ownerName = (ownerObj and ownerObj.Value and ownerObj.Value:IsA("Player")) and ownerObj.Value.Name or plot.Name
+
+	local objectsToHide = {}
+	for _, folderName in ipairs({ "Drills", "Storage", "DisplayCabinets" }) do
+		local folder = plot:FindFirstChild(folderName)
+		if folder then
+			for _, obj in ipairs(folder:GetDescendants()) do
+				if typeof(obj) == "Instance" then
+					table.insert(objectsToHide, obj)
+				end
+			end
+		end
+	end
+
+	coroutine.wrap(function()
+		task.wait(0.5)
+		for i = 1, #objectsToHide do
+			if not hidingEnabled then return end
+			local obj = objectsToHide[i]
+			if not obj then continue end
+
+			if obj:IsA("BasePart") then
+				pcall(function() obj.LocalTransparencyModifier = 1 end)
+			elseif isVisual(obj) then
+				if obj:IsA("Texture") or obj:IsA("Decal") or obj:IsA("SurfaceAppearance") then
+					pcall(function() obj:Destroy() end)
+				elseif isEffect(obj) and obj.Enabled then
+					pcall(function()
+						obj.Enabled = false
+						table.insert(effectsHidden, obj)
+					end)
+				end
+			end
+
+			if i % 30 == 0 then task.wait() end
+		end
+	end)()
+end
+
+-- ♻️ Unhide all
+local function disconnectAll()
+	for _, conn in ipairs(activeConnections) do
+		safeDisconnect(conn)
+	end
+	table.clear(activeConnections)
+end
+
+local function unhideAllPlots()
+	if toggleBusy then return end
+	toggleBusy = true
+	disconnectAll()
+	hidingEnabled = false
+
+	if hideLoopConnection then
+		safeDisconnect(hideLoopConnection)
+		hideLoopConnection = nil
+	end
+
+	for _, plot in ipairs(Workspace.Plots:GetChildren()) do
+		for _, folderName in ipairs({ "Drills", "Storage", "DisplayCabinets" }) do
+			local subFolder = plot:FindFirstChild(folderName)
+			if subFolder then
+				for _, obj in ipairs(subFolder:GetDescendants()) do
+					if obj:IsA("BasePart") then
+						pcall(function() obj.LocalTransparencyModifier = 0 end)
+					end
+				end
+			end
+		end
+		local marker = plot:FindFirstChild(HIDDEN_MARKER_NAME)
+		if marker then marker:Destroy() end
+	end
+
+	for _, obj in ipairs(effectsHidden) do
+		if isEffect(obj) then pcall(function() obj.Enabled = true end) end
+	end
+
+	table.clear(hiddenPlots)
+	table.clear(effectsHidden)
+	toggleBusy = false
+end
+
+-- 👁️ Watch claimed changes
+local function monitorPlot(plot)
+	if not hidingSystemReady or not hidingEnabled then return end
+	if monitoredPlots[plot] then return end
+	monitoredPlots[plot] = true
+
+	local owner = plot:FindFirstChild("Owner")
+	if not owner then return end
+
+	table.insert(activeConnections, owner:GetPropertyChangedSignal("Value"):Connect(function()
+		if not hidingSystemReady or not hidingEnabled then return end
+		task.delay(0.3, function()
+			if not hidingSystemReady or not hidingEnabled then return end
+			local claimedPlayer = owner.Value
+			if claimedPlayer and claimedPlayer ~= LocalPlayer then
+				if plot:FindFirstChild(HIDDEN_MARKER_NAME) then return end
+				task.spawn(function()
+					for attempt = 1, 3 do
+						if not hidingEnabled or owner.Value ~= claimedPlayer then return end
+						if waitForFullLoad(plot, claimedPlayer, 8) then
+							hidePlot(plot)
+							return
+						end
+						task.wait(1)
+					end
+				end)
+			end
+		end)
+	end))
+end
+
+-- 🔁 Hide unowned
+local function hideCurrentUnownedPlots()
+	if not hidingSystemReady or not hidingEnabled then return end
+	cleanOrphans()
+
+	for _, plot in ipairs(Workspace.Plots:GetChildren()) do
+		local owner = plot:FindFirstChild("Owner")
+		if owner and owner.Value and owner.Value ~= LocalPlayer and not plot:FindFirstChild(HIDDEN_MARKER_NAME) then
+			monitorPlot(plot)
+			task.spawn(function()
+				if waitForFullLoad(plot, owner.Value, 8) and hidingEnabled and owner.Value ~= LocalPlayer then
+					hidePlot(plot)
+				end
+			end)
+		else
+			monitorPlot(plot)
+		end
+	end
+end
+
+-- 👥 Watch new players
+Players.PlayerAdded:Connect(function(player)
+	task.delay(5, function()
+		if not hidingSystemReady or not hidingEnabled then return end
+		for _, plot in ipairs(Workspace.Plots:GetChildren()) do
+			local owner = plot:FindFirstChild("Owner")
+			if owner and owner.Value == player and not plot:FindFirstChild(HIDDEN_MARKER_NAME) then
+				task.spawn(function()
+					if waitForFullLoad(plot, player, 8) and hidingEnabled and owner.Value == player then
+						hidePlot(plot)
+					end
+				end)
+			end
+			monitorPlot(plot)
+		end
+	end)
+end)
+
+
+
+
+
+
+
+
+
+
+-- 🔘 GUI Toggle Integration
+local toggleDebounce = false
+
+local hideToggle = MainTab:CreateToggle({
+	Name = "Hide Players Plots",
+	CurrentValue = false,
+	Flag = "HidePlots",
+	Callback = function(v)
+		if toggleDebounce then
+			print("⏳ Please wait before toggling again.")
+			return -- ❌ Don't call .Set() here to avoid recursive Callback!
+		end
+
+		toggleDebounce = true
+		task.delay(0.5, function() toggleDebounce = false end)
+
+		hidingSystemReady = v
+		hidingEnabled = v
+
+		if v then
+			print("🟢 Hide Players Plots ON")
+			hideCurrentUnownedPlots()
+		else
+			print("🔴 Hide Players Plots OFF")
+			unhideAllPlots()
+		end
+	end
+})
+
+
+-- ♻️ Restore saved toggle state for Hide Players Plots
+task.defer(function()
+	local savedFlag = Rayfield.Flags["HidePlots"]
+	if not savedFlag or not savedFlag.CurrentValue then
+		print("♻️ [HidePlots] Saved toggle is OFF — no restore")
+		return
+	end
+
+	print("♻️ [HidePlots] Waiting for full game load before restoring toggle...")
+
+	local function waitForGameReady()
+		-- Ensure character and backpack are loaded
+		LocalPlayer.Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+		LocalPlayer:WaitForChild("Backpack", 10)
+
+		-- Wait until any plot has drills
+		for _ = 1, 60 do
+			for _, plot in Workspace.Plots:GetChildren() do
+				local drills = plot:FindFirstChild("Drills")
+				if drills and #drills:GetChildren() > 0 then
+					return true
+				end
+			end
+			task.wait(0.5)
+		end
+		return false
+	end
+
+	if waitForGameReady() then
+		if hidingEnabled then return end -- Avoid restoring if already toggled manually
+		print("♻️ [HidePlots] Game fully loaded — restoring Hide toggle")
+		hidingSystemReady = true
+		hideToggle:Set(true)
+	else
+		warn("⚠️ [HidePlots] Timeout: Game not ready after waiting.")
+	end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local RunService = game:GetService("RunService")
+
+-- 🧠 Global states
+local hidingOre = false
+local activeRenderID = "HideOreRender"
+
+-- ✅ Smart Bind Logic
+local function bindOreRender()
+	RunService:UnbindFromRenderStep(activeRenderID)
+
+	RunService:BindToRenderStep(activeRenderID, Enum.RenderPriority.Camera.Value + 1, function()
+		-- Put your logic here that runs every frame when enabled
+		-- Example: Destroy unwanted ore popup
+		local playerGui = game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+		if not hidingOre or not playerGui then return end
+
+		local notifyFrame = playerGui:FindFirstChild("Menu", true)
+		if notifyFrame and notifyFrame:FindFirstChild("SecondaryNotify", true) then
+			local sec = notifyFrame:FindFirstChild("SecondaryNotify", true)
+			for _, child in ipairs(sec:GetChildren()) do
+				if child:IsA("GuiObject") then
+					pcall(function() child:Destroy() end)
+				end
+			end
+		end
+	end)
+end
+
+-- ❌ Unbind Logic
+local function unbindOreRender()
+	RunService:UnbindFromRenderStep(activeRenderID)
+end
+
+-- 🎛️ GUI Toggle
+local oreToggle = MainTab:CreateToggle({
+	Name = "Hide Ore Notification",
+	CurrentValue = false,
+	Flag = "HideOre",
+	Callback = function(v)
+		hidingOre = v
+		if v then
+			print("🟢 [Ore] Hiding RenderStep ON")
+			bindOreRender()
+		else
+			print("🔴 [Ore] Hiding RenderStep OFF")
+			unbindOreRender()
+		end
+	end
+})
+
+-- ♻️ Restore State if Toggle ON (without dupe)
+task.defer(function()
+	local saved = Rayfield.Flags["HideOre"]
+	if saved and saved.CurrentValue then
+		print("♻️ [Ore] Restoring toggle state")
+		oreToggle:Set(true) -- Triggers callback to bind safely
+	else
+		unbindOreRender()
+	end
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MainTab:CreateSection("Potion")
+-- 📦 Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- 👤 Player setup
+local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer:WaitForChild("Backpack")
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+-- 🌐 Remote + GUI
+local UsePotionRemote = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+	:WaitForChild("Services"):WaitForChild("WeatherService")
+	:WaitForChild("RE"):WaitForChild("UsePotion")
+
+local gui = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Menu")
+	:WaitForChild("CanvasGroup"):WaitForChild("ToggleMusic"):WaitForChild("Container")
+
+-- 📜 Keywords
+local potionKeywords = {
+	"WeakLuckPotion", "MediumLuckPotion", "StrongLuckPotion"
+}
+
+-- 📦 Get item names from folder
+local function getItemNames(folder)
+	local names = {}
+	for _, item in ipairs(folder:GetChildren()) do
+		if item:IsA("Tool") or item:IsA("Model") then
+			table.insert(names, item.Name)
+		end
+	end
+	return names
+end
+
+local potionOptions = getItemNames(ReplicatedStorage:WaitForChild("Potions"))
+
+-- 🔍 State
+local selectedPotionName = nil
+local shouldRun = false
+local autoUseCooldown = false
+local lastNoPotionPrinted = false
+local renderStepId = "PotionAutoUse" -- ✅ FIXED: Defined missing argument
+
+-- 🔤 Normalize helper
+local function normalize(str)
+	return string.lower(str:gsub("%s+", ""))
+end
+
+-- 🧪 Check if selected potion is already active in GUI
+local RunService = game:GetService("RunService")
+local renderStepId = "PotionCheckLoop"
+local lastPrintedActive = false
+
+local function isPotionActive()
+	if not shouldRun then
+		lastPrintedActive = false
+		return false
+	end
+
+	local selectedNorm = normalize(selectedPotionName or "")
+	if selectedNorm == "" then
+		lastPrintedActive = false
+		return false
+	end
+
+	for _, obj in ipairs(gui:GetChildren()) do
+		if obj:IsA("GuiObject") then
+			local normName = normalize(obj.Name)
+			if normName:find(selectedNorm) and obj:FindFirstChild("TimeLeft") then
+				local timeLeft = tonumber(obj.TimeLeft.Text:match("(%d+)"))
+				if timeLeft and timeLeft > 3 then
+					if not lastPrintedActive then
+						print("🧪 [AutoUse] '" .. selectedPotionName .. "' is already active (" .. timeLeft .. "s left). Waiting...")
+						lastPrintedActive = true
+					end
+					return true
+				end
+			end
+		end
+	end
+
+	lastPrintedActive = false
+	return false
+end
+
+
+-- 📦 Try to use potion
+local function useAvailablePotion()
+	if not shouldRun then return print("⛔ [AutoUse] Toggle is OFF") end
+	if not selectedPotionName or selectedPotionName == "None" then return print("⚠️ [AutoUse] No potion selected") end
+
+	if isPotionActive() then return false end
+	print("🎯 [AutoUse] No active potion - checking inventory...")
+
+	local heldTool = Character:FindFirstChildOfClass("Tool")
+	if heldTool and heldTool.Name == selectedPotionName then
+		print("🧪 [AutoUse] Holding potion:", heldTool.Name)
+		--UsePotionRemote:FireServer()
+		print("✅ [AutoUse] Potion used directly")
+		task.wait(0.3)
+		Character.Humanoid:UnequipTools()
+		print("🔄 [AutoUse] Unequipped after use")
+		return true
+	end
+
+	local potionTool = Backpack:FindFirstChild(selectedPotionName)
+	if potionTool and potionTool:IsA("Tool") then
+		print("🎒 [AutoUse] Found in backpack:", potionTool.Name)
+		if Character:FindFirstChild("Humanoid") then
+			Character.Humanoid:EquipTool(potionTool)
+			task.delay(0.25, function()
+				--UsePotionRemote:FireServer()
+				print("✅ [AutoUse] Potion used from backpack")
+				task.wait(0.3)
+				Character.Humanoid:UnequipTools()
+				print("🔄 [AutoUse] Unequipped after use")
+			end)
+			return true
+		else
+			warn("⚠️ [AutoUse] No Humanoid found")
+		end
+	end
+
+	print("❌ [AutoUse] Potion not found: " .. selectedPotionName)
+	return false
+end
+
+-- ▶️ Start loop
+local function startPotionLoop()
+	RunService:UnbindFromRenderStep(renderStepId)
+
+	RunService:BindToRenderStep(renderStepId, Enum.RenderPriority.Character.Value + 1, function()
+		if not shouldRun then return end
+
+		if not autoUseCooldown and not isPotionActive() then
+			autoUseCooldown = true
+			print("⏰ No active potion - using one now...")
+
+			local success = useAvailablePotion()
+			if not success and not lastNoPotionPrinted then
+				print("⚠️ No valid potions in your inventory. Auto-use skipped.")
+				lastNoPotionPrinted = true
+			elseif success then
+				lastNoPotionPrinted = false
+			end
+
+			task.delay(2, function()
+				autoUseCooldown = false
+			end)
+		end
+	end)
+end
+
+-- ⏹️ Stop loop
+local function stopPotionLoop()
+	RunService:UnbindFromRenderStep(renderStepId)
+	local heldTool = Character:FindFirstChildOfClass("Tool")
+	if heldTool then
+		Character.Humanoid:UnequipTools()
+		print("🛑 Unequipped tool:", heldTool.Name)
+	end
+end
+
+-- 🔘 Toggle setup
+local potionToggle = MainTab:CreateToggle({
+	Name = "Auto Use",
+	CurrentValue = false,
+	Flag = "UsePotions",
+	Callback = function(v)
+		shouldRun = v
+		if v then
+			print("🟢 Auto Use ON")
+			startPotionLoop()
+		else
+			print("🔴 Auto Use OFF")
+			stopPotionLoop()
+		end
+	end
+})
+
+-- ♻️ Restore state if toggle was ON
+task.defer(function()
+	if Rayfield.Flags["UsePotions"] and Rayfield.Flags["UsePotions"].CurrentValue then
+		print("♻️ Restoring Auto Use toggle (saved ON)")
+		potionToggle:Set(true)
+	end
+end)
+
+
+
+
+
+
+MainTab:CreateDropdown({
+	Name = "Potion",
+	Options = potionOptions,
+	CurrentOption = potionOptions[1] or "None",
+	MultipleOptions = false,
+	Flag = "PotionSelected",
+	Callback = function(selected)
+		local newPotion = selected[1]
+		if not newPotion or newPotion == selectedPotionName then
+			return
+		end
+
+		print("📦 Selected new potion:", newPotion)
+		selectedPotionName = newPotion
+
+		-- Smart re-toggle logic
+		if Rayfield and Rayfield.Flags and Rayfield.Flags["UsePotions"] then
+			local wasOn = Rayfield.Flags["UsePotions"].CurrentValue
+			if wasOn then
+				print("🔁 Auto Use was ON — restarting logic...")
+
+				-- First turn OFF toggle
+				potionToggle:Set(false)
+
+				-- Then wait a little and turn back ON manually
+				task.delay(1.5, function()
+					potionToggle:Set(true)
+					print("✅ Auto Use re-enabled after potion change.")
+				end)
+			end
+		end
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MainTab:CreateSection("Totem")
+
+-- 📦 Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- 👤 Player setup
+local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer:WaitForChild("Backpack")
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+-- 🌐 Remote Services
+local WeatherService = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+	:WaitForChild("Services"):WaitForChild("WeatherService")
+local GetCurrentWeather = WeatherService:WaitForChild("RF"):WaitForChild("GetCurrentWeather")
+local UseTotemRemote = WeatherService:WaitForChild("RE"):WaitForChild("UseTotem")
+
+-- 🔤 State
+local selectedTotemName = nil
+local autoTotemShouldRun = false
+local autoTotemCooldown = false
+local switchPause = false
+local lastWeatherMatchPrint = false
+local lastWeatherValue = nil
+local renderStepId = "TotemAutoUse"
+
+-- 📦 Folder Lookup
+local totemOptions = {}
+for _, item in ipairs(ReplicatedStorage:WaitForChild("Totem"):GetChildren()) do
+	table.insert(totemOptions, item.Name)
+end
+
+-- 🔤 Normalize helper
+local function normalize(str)
+	return string.lower((str or ""):gsub("%s+", ""))
+end
+-- 🌤️ Smart Weather-Based Totem System
+
+local function getCurrentWeather()
+	local success, result = pcall(function()
+		return GetCurrentWeather:InvokeServer()
+	end)
+	if success and result then
+		return tostring(result)
+	else
+		warn("⚠️ Failed to get current weather:", result)
+		return nil
+	end
+end
+
+local function clearWrongTools()
+	local heldTool = Character:FindFirstChildOfClass("Tool")
+	if heldTool and heldTool.Name ~= selectedTotemName then
+		print("🧼 Holding wrong tool (" .. heldTool.Name .. "), unequipping...")
+		Character.Humanoid:UnequipTools()
+		task.wait(0.1)
+	end
+end
+
+local function isHoldingCorrectTool()
+	local tool = Character:FindFirstChildOfClass("Tool")
+	return tool and tool.Name == selectedTotemName
+end
+
+local function useAvailableTotem()
+	if switchPause then return false end
+	if not selectedTotemName or selectedTotemName == "None" then
+		print("⚠️ No totem selected in dropdown.")
+		return false
+	end
+
+	-- ✅ Check if tool exists first
+	local heldTool = Character:FindFirstChildOfClass("Tool")
+	local totemTool = heldTool and heldTool.Name == selectedTotemName and heldTool
+	if not totemTool then
+		totemTool = Backpack:FindFirstChild(selectedTotemName)
+		if not totemTool then
+			print("❌ Selected totem not found: " .. selectedTotemName)
+			return false
+		end
+	end
+
+	-- 🌤️ Then check weather match
+	local currentWeather = getCurrentWeather()
+	if not currentWeather then
+		print("⚠️ Unable to get weather. Try again later.")
+		return false
+	end
+
+	if normalize(selectedTotemName):find(normalize(currentWeather)) then
+		if lastWeatherValue ~= currentWeather or not lastWeatherMatchPrint then
+			print("🌤️ Current weather matches selected totem (" .. selectedTotemName .. ") — skipping use.")
+			lastWeatherMatchPrint = true
+			lastWeatherValue = currentWeather
+		end
+		return false
+	else
+		lastWeatherMatchPrint = false
+	end
+
+	clearWrongTools()
+
+	-- 🧤 Equip and use if needed
+	if not isHoldingCorrectTool() then
+		print("🎒 Equipping totem from backpack:", selectedTotemName)
+		Character.Humanoid:EquipTool(totemTool)
+		task.wait(0.25)
+	end
+
+	if isHoldingCorrectTool() and not switchPause then
+		--UseTotemRemote:FireServer()
+		print("✅ Used totem:", selectedTotemName)
+		task.delay(0.1, function()
+			Character.Humanoid:UnequipTools()
+			print("🧼 Unequipped totem after use.")
+		end)
+		return true
+	else
+		print("⚠️ Failed to equip or selection changed.")
+		return false
+	end
+end
+
+
+
+
+-- ▶️ Start loop
+local function startTotemLoop()
+	RunService:UnbindFromRenderStep(renderStepId)
+	RunService:BindToRenderStep(renderStepId, Enum.RenderPriority.Character.Value + 1, function()
+		if not autoTotemShouldRun or switchPause or autoTotemCooldown then return end
+		autoTotemCooldown = true
+		local success = useAvailableTotem()
+		task.delay(2, function()
+			autoTotemCooldown = false
+		end)
+	end)
+end
+
+-- ⏹️ Stop loop
+local function stopTotemLoop()
+	RunService:UnbindFromRenderStep(renderStepId)
+	autoTotemCooldown = false
+	local heldTool = Character:FindFirstChildOfClass("Tool")
+	if heldTool then
+		Character.Humanoid:UnequipTools()
+		print("🛑 Unequipped tool:", heldTool.Name)
+	end
+end
+
+-- 🔘 Toggle
+local totemToggle = MainTab:CreateToggle({
+	Name = "Auto Use Totem",
+	CurrentValue = false,
+	Flag = "AutoUseTotem",
+	Callback = function(v)
+		autoTotemShouldRun = v
+		if v then
+			print("🟢 Auto Use Totem ON")
+			startTotemLoop()
+		else
+			print("🔴 Auto Use Totem OFF")
+			stopTotemLoop()
+		end
+	end
+})
+
+-- ♻️ Restore saved toggle
+if Rayfield.Flags["AutoUseTotem"] and Rayfield.Flags["AutoUseTotem"].CurrentValue then
+	print("♻️ Restoring Auto Use Totem toggle")
+	totemToggle:Set(true)
+end
+
+-- ⬇️ Dropdown
+MainTab:CreateDropdown({
+	Name = "Totem",
+	Options = totemOptions,
+	CurrentOption = totemOptions[1] or "None",
+	MultipleOptions = false,
+	Flag = "TotemSelected",
+	Callback = function(selected)
+		local newTotem = selected[1]
+		if not newTotem or newTotem == selectedTotemName then return end
+
+		selectedTotemName = newTotem
+		print("📦 Selected new totem:", newTotem)
+
+		switchPause = true
+		if Rayfield.Flags["AutoUseTotem"] and Rayfield.Flags["AutoUseTotem"].CurrentValue then
+			totemToggle:Set(false)
+			print("🔁 Restarting Auto Use after switch...")
+			task.delay(1.25, function()
+				switchPause = false
+				totemToggle:Set(true)
+			end)
+		else
+			task.delay(0.75, function()
+				switchPause = false
+			end)
+		end
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MainTab:CreateSection("Self Mics")
+
+MainTab:CreateButton({Name = "Refresh Character", Callback = function() 
+	    local localPlayer = game:GetService('Players').LocalPlayer;
+    local localCharacter = localPlayer.Character;
+    localCharacter:FindFirstChildOfClass('Humanoid').Health = 0;
+    for _, v in pairs(localPlayer.Character:GetChildren()) do
+        if v.Name ~= 'HumanoidRootPart' and v.Name ~= 'Humanoid' then
+            v:Destroy();
+        end;
+    end;   
+	local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local ragdollFolder = character:FindFirstChild("RagdollConstraints")
+    if ragdollFolder then
+        for _, descendant in ipairs(ragdollFolder:GetDescendants()) do
+            pcall(function()
+                descendant:Destroy()
+            end)
+        end
+        pcall(function()
+            ragdollFolder:Destroy()
+        end)
+    else
+    end
+
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    local targetPosition = Vector3.new(151.41696166992188, 90.0679702758789, 327.1302490234375)
+    local function findNearestTouchInterest()
+        local closestTouchInterest = nil
+        local closestDistance = math.huge
+
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("TouchTransmitter") and descendant.Parent and descendant.Parent:IsA("BasePart") then
+                local part = descendant.Parent
+                local distance = (part.Position - targetPosition).Magnitude
+
+                if distance < closestDistance then
+                closestDistance = distance
+                closestTouchInterest = descendant
+                end
+            end
+        end
+
+        return closestTouchInterest
+    end
+    local touch = findNearestTouchInterest()
+    if touch then
+        local part = touch.Parent
+        pcall(function()
+            firetouchinterest(humanoidRootPart, part, 0) -- touch begin
+            wait(0.1)
+            firetouchinterest(humanoidRootPart, part, 1) -- touch end
+        end)
+    else
+    end
+end})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+local Clip = true
+local NoclipConnection = nil
+
+local function isCharacterValid(char)
+	if not char then return false end
+	local hum = char:FindFirstChildOfClass("Humanoid")
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hum or hum.Health <= 0 or not hrp then return false end
+	if hrp.Position.Y < -200 then return false end -- in the void
+	return true
+end
+
+local function getCollidableParts(char)
+	local parts = {}
+	for _, part in ipairs(char:GetDescendants()) do
+		if part:IsA("BasePart") and part.CanCollide then
+			table.insert(parts, part)
+		end
+	end
+	return parts
+end
+
+local function enableNoclip()
+	Clip = false
+
+	local function setup()
+		local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+		local parts = getCollidableParts(char)
+
+		if NoclipConnection then NoclipConnection:Disconnect() end
+
+		NoclipConnection = RunService.Stepped:Connect(function()
+			if Clip then return end
+			if not isCharacterValid(char) then return end
+
+			for _, part in ipairs(parts) do
+				if part:IsDescendantOf(char) and part.CanCollide then
+					part.CanCollide = false
+				end
+			end
+		end)
+	end
+
+	setup()
+end
+
+local function disableNoclip()
+	Clip = true
+
+	if NoclipConnection then
+		NoclipConnection:Disconnect()
+		NoclipConnection = nil
+	end
+
+	local char = LocalPlayer.Character
+	if char then
+		for _, part in ipairs(char:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = true
+			end
+		end
+	end
+end
+
+-- ♻️ Refresh on character respawn
+Players.LocalPlayer.CharacterAdded:Connect(function()
+	if not Clip then
+		task.wait(1)
+		enableNoclip()
+	end
+end)
+
+-- 🔘 Rayfield Toggle
+MainTab:CreateToggle({
+	Name = "Noclip",
+	CurrentValue = false,
+	Flag = "Noclip",
+	Callback = function(state)
+		if state then
+			enableNoclip()
+			print("🟢 Noclip Enabled")
+		else
+			disableNoclip()
+			print("🔴 Noclip Disabled")
+		end
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- 🧠 Utility: Valid Humanoid
+local function getHumanoid()
+	local character = LocalPlayer.Character
+	if character then
+		return character:FindFirstChildWhichIsA("Humanoid")
+	end
+end
+
+local walkspeedEnabled = false
+local currentSpeed = getHumanoid().WalkSpeed -- default value
+local speedLoopConnection = nil
+local permspeed = getHumanoid().WalkSpeed
+
+
+-- 🌀 Main Loop: Enforce speed
+local function startSpeedLoop()
+	if speedLoopConnection then speedLoopConnection:Disconnect() end
+
+	speedLoopConnection = RunService.RenderStepped:Connect(function()
+		if not walkspeedEnabled then return end
+
+		local humanoid = getHumanoid()
+		if humanoid then
+			humanoid.WalkSpeed = currentSpeed
+		end
+	end)
+end
+
+-- 🛑 Stop Loop
+local function stopSpeedLoop()
+	if speedLoopConnection then
+		speedLoopConnection:Disconnect()
+		speedLoopConnection = nil
+	end
+
+	local humanoid = getHumanoid()
+	if humanoid then
+		humanoid.WalkSpeed = permspeed -- reset to normal
+	end
+end
+
+-- ✅ Toggle UI
+MainTab:CreateToggle({
+	Name = "Walkspeed",
+	CurrentValue = false,
+	Flag = "Walkspeed",
+	Callback = function(state)
+		walkspeedEnabled = state
+
+		if state then
+			startSpeedLoop()
+			print("🟢 Walkspeed ON")
+		else
+			stopSpeedLoop()
+			print("🔴 Walkspeed OFF")
+		end
+	end
+})
+
+-- 🎚️ Slider UI
+MainTab:CreateSlider({
+	Name = "Speed %",
+	Range = {3, 100},
+	Increment = 1,
+	Suffix = "%",
+	CurrentValue = 24,
+	Flag = "SpeedSlider",
+	Callback = function(val)
+		currentSpeed = val
+
+		if walkspeedEnabled then
+			local humanoid = getHumanoid()
+			if humanoid then
+				humanoid.WalkSpeed = currentSpeed
+			end
+		end
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--TOGGLES TAB 
+local TogglesTab = Window:CreateTab("Toggles", TOGGLESIconID)
+
+
+
+TogglesTab:CreateToggle({
+	Name = "Auto Drill",
+	CurrentValue = false,
+	Flag = "AutoDrill",
+	Callback = function(enabled)
+		local RunService = game:GetService("RunService")
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+		local DrillEvent = ReplicatedStorage:WaitForChild("Packages")
+			:WaitForChild("Knit")
+			:WaitForChild("Services")
+			:WaitForChild("OreService")
+			:WaitForChild("RE")
+			:WaitForChild("RequestRandomOre")
+
+		if enabled then
+			RunService:BindToRenderStep("Drill", 0, function()
+				DrillEvent:FireServer()
+				DrillEvent:FireServer()
+				DrillEvent:FireServer()
+			end)
+			print("🟢 Auto Drill ON")
+		else
+			RunService:UnbindFromRenderStep("Drill")
+			print("🔴 Auto Drill OFF")
+		end
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+local backpack = player:WaitForChild("Backpack")
+
+local sellRemote = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+	:WaitForChild("Services"):WaitForChild("OreService")
+	:WaitForChild("RE"):WaitForChild("SellIndividual")
+
+local excludedFolders = {
+	ReplicatedStorage:WaitForChild("Tools"),
+	ReplicatedStorage:WaitForChild("HandDrills"),
+	ReplicatedStorage:WaitForChild("Drills"),
+}
+
+local autoSellEnabled = false
+local sellDelay = 1.5
+local rarityThreshold = 1000
+local soldCache = {}
+local sellLoopRunning = false
+
+-- 🔍 Checks
+local function isExcluded(tool)
+	if not tool:IsA("Tool") then return true end
+	if tool.Name:lower():find("drill") then return true end
+	for _, folder in ipairs(excludedFolders) do
+		if folder:FindFirstChild(tool.Name) then
+			return true
+		end
+	end
+	return false
+end
+
+local function getTooltipChance(tool)
+	if not tool:IsA("Tool") then return nil end
+
+	local tipString
+	if typeof(tool.ToolTip) == "string" then
+		tipString = tool.ToolTip
+	elseif tool:FindFirstChild("ToolTip") and tool.ToolTip:IsA("StringValue") then
+		tipString = tool.ToolTip.Value
+	end
+
+	if tipString and typeof(tipString) == "string" then
+		local currentStr, totalStr = string.match(tipString, "^(%d+)%s*/%s*([%d,]+)$")
+		if currentStr and totalStr then
+			local cleanTotal = totalStr:gsub(",", "")
+			local num = tonumber(cleanTotal)
+			return num or nil
+		end
+	end
+
+	return nil
+end
+
+
+-- 🔁 Auto Sell Loop
+local function autoSellLoop()
+	if sellLoopRunning then return end
+	sellLoopRunning = true
+
+	while autoSellEnabled do
+		for _, tool in ipairs(backpack:GetChildren()) do
+			if tool:IsA("Tool") and not soldCache[tool] and not isExcluded(tool) then
+				local chance = getTooltipChance(tool)
+				if typeof(chance) == "number" and chance <= rarityThreshold then
+					sellRemote:FireServer(tool)
+					soldCache[tool] = true
+					print("💰 Sold:", tool.Name, "| Chance: 1/" .. tostring(chance))
+					break
+				end
+			end
+		end
+		task.wait(tonumber(sellDelay) or 1.5)
+	end
+
+	sellLoopRunning = false
+end
+
+
+local function stopAutoSell()
+	autoSellEnabled = false
+	soldCache = {}
+end
+
+-- 🔘 Rayfield Toggle
+TogglesTab:CreateToggle({
+	Name = "Auto Sell",
+	CurrentValue = false,
+	Flag = "AutoSell",
+	Callback = function(state)
+		if state then
+			print("🟢 Auto Sell Enabled")
+			autoSellEnabled = true
+			task.spawn(autoSellLoop)
+		else
+			print("🔴 Auto Sell Disabled")
+			stopAutoSell()
+		end
+	end
+})
+
+-- 🔤 Text Input (Rarity Threshold)
+TogglesTab:CreateInput({
+	Name = "Sell Under 1/X Chance",
+	PlaceholderText = "Enter e.g. 1000",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		if typeof(Text) ~= "string" or Text == "" then return end
+		local cleaned = Text:gsub(",", "")
+		local value = tonumber(cleaned)
+		if value and value > 0 then
+			rarityThreshold = value
+			print("📊 Updated Rarity Threshold → 1/" .. value)
+		else
+			warn("⚠️ Invalid number input:", Text)
+		end
+	end
+})
+
+-- ⏱️ Sell Delay Slider
+TogglesTab:CreateSlider({
+	Name = "Sell Delay",
+	Range = {0.1, 10},
+	Increment = 0.1,
+	Suffix = "s",
+	CurrentValue = 1.5,
+	Flag = "SellDelay",
+	Callback = function(value)
+		sellDelay = tonumber(value)
+		print("⏱️ Sell Delay set to:", sellDelay, "seconds")
+	end
+})
+
+
+
+TogglesTab:CreateSection("Drills")
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local CollectDrillRE = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+	:WaitForChild("Services"):WaitForChild("PlotService"):WaitForChild("RE"):WaitForChild("CollectDrill")
+
+local autoCollectEnabled = false
+local drillDelay = 1.0
+local selectedTargets = {"Drills"}
+
+-- 🔍 Get the local player's plot
+local function getPlayerPlot()
+	for _, plot in ipairs(workspace:WaitForChild("Plots"):GetChildren()) do
+		if plot:FindFirstChild("Owner") and plot.Owner.Value == player then
+			return plot
+		end
+	end
+	return nil
+end
+
+-- 🎯 Target dropdown
+TogglesTab:CreateDropdown({
+	Name = "Auto Collect Target",
+	Options = {"Drills", "Storages"},
+	CurrentOption = {"Drills"},
+	MultipleOptions = false,
+	Flag = "CollectTargetDropdown",
+	Callback = function(Options)
+		selectedTargets = Options
+		print("🎯 Auto Collect set to:", table.concat(selectedTargets, ", "))
+	end
+})
+
+-- 🔁 Toggle
+TogglesTab:CreateToggle({
+	Name = "Auto Collect",
+	CurrentValue = false,
+	Flag = "AutoCollect",
+	Callback = function(enabled)
+		autoCollectEnabled = enabled
+
+		if not selectedTargets or #selectedTargets == 0 then
+			warn("⚠️ No targets selected. Choose Drills or Storages.")
+			return
+		end
+
+		if enabled then
+			print("🟢 Auto Collect ENABLED")
+			RunService:BindToRenderStep("UnifiedAutoCollect", Enum.RenderPriority.Last.Value, function()
+				if not autoCollectEnabled then return end
+
+				local plot = getPlayerPlot()
+				if not plot then return end
+
+				-- 🔁 Collect from Drills
+				if table.find(selectedTargets, "Drills") then
+					local drills = plot:FindFirstChild("Drills")
+					if drills then
+						for _, drill in ipairs(drills:GetChildren()) do
+							if not autoCollectEnabled then break end
+							task.spawn(function()
+								CollectDrillRE:FireServer(drill)
+								print("🔁 Collected from Drill:", drill.Name)
+							end)
+							task.wait(drillDelay)
+						end
+					end
+				end
+
+				-- 💰 Collect from Storages
+				if table.find(selectedTargets, "Storages") then
+					local storage = plot:FindFirstChild("Storage")
+					if storage then
+						for _, bin in ipairs(storage:GetChildren()) do
+							if not autoCollectEnabled then break end
+							task.spawn(function()
+								CollectDrillRE:FireServer(bin)
+								print("💰 Collected from Storage:", bin.Name)
+							end)
+							task.wait(drillDelay)
+						end
+					end
+				end
+			end)
+		else
+			print("🔴 Auto Collect DISABLED")
+			RunService:UnbindFromRenderStep("UnifiedAutoCollect")
+		end
+	end
+})
+
+-- ⏱️ Speed slider
+TogglesTab:CreateSlider({
+	Name = "Collect Speed",
+	Range = {0.1, 5},
+	Increment = 0.1,
+	Suffix = "s",
+	CurrentValue = drillDelay,
+	Flag = "DrillDelay",
+	Callback = function(v)
+		drillDelay = v
+		print("⏱️ Collect delay set to:", drillDelay)
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- === SHOP TAB ===
+local ShopTab = Window:CreateTab("Shop", SHOPSIconID)
+ShopTab:CreateSection("Show UI")
+
+ShopTab:CreateToggle({Name = "Drill ", CurrentValue = false, Callback = function(v)
+
+	if v then
+		game:GetService('RunService'):BindToRenderStep("Drill", 0, function() 	
+		game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Buy").Visible = true
+	end)
+		else
+		game:GetService('RunService'):UnbindFromRenderStep("Drill")
+	game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Buy").Visible = false
+
+end
+end})
+
+ShopTab:CreateToggle({Name = "Sell ", CurrentValue = false, Callback = function(v) 
+
+		if v then
+		game:GetService('RunService'):BindToRenderStep("Drill", 0, function() 	
+		game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Sell").Visible = true
+	end)
+		else
+		game:GetService('RunService'):UnbindFromRenderStep("Drill")
+	game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Sell").Visible = false
+
+end
+end})
+
+
+ShopTab:CreateToggle({Name = "HandDrill ", CurrentValue = false,  Callback = function(v) 
+
+			if v then
+		game:GetService('RunService'):BindToRenderStep("Drill", 0, function() 	
+		game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("HandDrills").Visible = true
+	end)
+		else
+		game:GetService('RunService'):UnbindFromRenderStep("Drill")
+	game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("HandDrills").Visible = false
+
+end
+end})
+
+ShopTab:CreateToggle({Name = "Craft ", CurrentValue = false,  Callback = function(v) 
+
+			if v then
+		game:GetService('RunService'):BindToRenderStep("Drill", 0, function() 	
+		game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Crafting").Visible = true
+	end)
+		else
+		game:GetService('RunService'):UnbindFromRenderStep("Drill")
+	game:GetService("Players").LocalPlayer.PlayerGui.Menu.CanvasGroup:FindFirstChild("Crafting").Visible = false
+
+end
+end})
+
+
+ShopTab:CreateSection("Crafting")
+
+
+
+-- ⚙️ Services and Setup
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local Backpack = LocalPlayer:WaitForChild("Backpack")
+
+-- 📦 Recipes module
+local CraftingRecipes = require(ReplicatedStorage.Resources.Modules.CraftingRecipes)
+
+-- 🧼 Helper to normalize strings (trims + lowercases)
+local function normalize(str)
+	if typeof(str) ~= "string" then
+		return ""
+	end
+	str = str:match("^%s*(.-)%s*$") or str -- trim
+	return string.lower(str)
+end
+
+-- ✅ Function to print ingredient requirements
+local function checkMaterials(recipeName)
+	for _, recipe in ipairs(CraftingRecipes) do
+		if normalize(recipe.VisualName) == normalize(recipeName) then
+			print("🔨 Checking materials for:", recipe.VisualName)
+
+			for _, ingredient in ipairs(recipe.Recipe) do
+				local foundQuantity = 0
+
+				for _, tool in ipairs(Backpack:GetChildren()) do
+					if tool:IsA("Tool") and tool.Name == ingredient.Name then
+						local quantity = tool:GetAttribute("quantity") or 1
+						foundQuantity += quantity
+					end
+				end
+
+				if foundQuantity >= ingredient.Quantity then
+					print("✅ Enough:", ingredient.Name, "x" .. ingredient.Quantity)
+				else
+					print("❌ Missing:", ingredient.Name, "Need:", ingredient.Quantity, "Have:", foundQuantity)
+				end
+			end
+
+			return -- ✅ Stop here since we found the recipe
+		end
+	end
+
+	print("⚠️ Recipe not found:", recipeName)
+end
+
+local craftableItems = {}
+for _, recipe in ipairs(CraftingRecipes) do
+	if recipe.VisualName then
+		table.insert(craftableItems, recipe.VisualName)
+	end
+end
+
+
+ShopTab:CreateDropdown({Name = "Craft",Options = craftableItems,CurrentOption = craftableItems[1], MultipleOptions = false, Flag = "Crafting", Callback = function(selected)
+		local selectedRecipe
+		if typeof(selected) == "table" then
+			selectedRecipe = selected[1]
+		else
+			selectedRecipe = selected
+		end
+
+		checkMaterials(selectedRecipe)
+	end
+})
+
+
+
+ShopTab:CreateToggle({Name = "AutoCraft", CurrentValue = false, Flag = "AutoCraft", Callback = function(v) end})
+--[[
+
+local args = {
+	"Reinforced Drill"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyDrill"):FireServer(unpack(args))
+
+
+local args = {
+	"Standard Vault"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyDrill"):FireServer(unpack(args))
+local args = {
+	"Reinforced Hand Drill"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyHandDrill"):FireServer(unpack(args))
+local args = {
+	"Weak Luck Potion"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RF"):WaitForChild("CraftItem"):InvokeServer(unpack(args))
+
+
+
+
+]]
+ShopTab:CreateSection("Auto Buy Options")
+
+-- ✅ CLEAN + SMART VERSION (Filters out names in CraftingRecipes + Caches results)
+
+-- ⚙️ Services
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+
+-- 📊 Stats
+local leaderstats = LocalPlayer:WaitForChild("leaderstats")
+local rebirths = leaderstats:WaitForChild("Rebirths").Value
+local cash = leaderstats:WaitForChild("Cash").Value
+
+-- 📦 Recipes module
+local CraftingRecipes = require(ReplicatedStorage.Resources.Modules.CraftingRecipes)
+
+-- 📁 Drill folders by category
+local drillFolders = {
+	Storages = ReplicatedStorage:WaitForChild("Drills"),
+	Drills = ReplicatedStorage:WaitForChild("Drills"),
+	HandDrills = ReplicatedStorage:WaitForChild("HandDrills")
+}
+
+-- 🧼 Normalize helper
+local function normalize(str)
+	if typeof(str) ~= "string" then return "" end
+	return string.lower(str:match("^%s*(.-)%s*$"))
+end
+
+-- 🚫 Filter out names used in crafting
+local function getFilteredCraftNames()
+	local excluded = {}
+	for _, recipe in ipairs(CraftingRecipes) do
+		if recipe.VisualName then
+			excluded[normalize(recipe.VisualName)] = true
+		end
+	end
+	return excluded
+end
+
+local ExcludedCraftNames = getFilteredCraftNames()
+local DrillCache = {} -- 🧠 Cached drills per category
+
+-- 🔁 Get drills per category and filter out recipe names
+local function getSortedDrills(category)
+	if DrillCache[category] then
+		return DrillCache[category]
+	end
+
+	local folder = drillFolders[category]
+	if not folder then return {} end
+
+	local drills = {}
+	for _, drill in ipairs(folder:GetChildren()) do
+		local isValid = drill:IsA("Tool") or drill:IsA("Model")
+		local name = drill.Name
+		if isValid and not ExcludedCraftNames[normalize(name)] then
+			local isHand = category == "HandDrills"
+			local isDrill = category == "Drills" and string.find(name, "Drill")
+			local isStorage = category == "Storages" and not string.find(name, "Drill")
+
+			if isHand or isDrill or isStorage then
+				table.insert(drills, {
+					Name = name,
+					RebirthsNeeded = drill:GetAttribute("RebirthsNeeded") or 0,
+					Cost = drill:GetAttribute("Cost") or 0
+				})
+			end
+		end
+	end
+
+	table.sort(drills, function(a, b)
+		if a.RebirthsNeeded == b.RebirthsNeeded then
+			return a.Cost < b.Cost
+		else
+			return a.RebirthsNeeded < b.RebirthsNeeded
+		end
+	end)
+
+	DrillCache[category] = drills
+	return drills
+end
+
+-- 🔤 Extract drill names for dropdowns
+local function getDrillNames(category)
+	local names = {}
+	for _, drill in ipairs(getSortedDrills(category)) do
+		table.insert(names, drill.Name)
+	end
+	return names
+end
+
+-- 🔍 Drill checker
+local function checkDrillByName(category, name)
+	local found
+	for _, drill in ipairs(getSortedDrills(category)) do
+		if drill.Name == name then
+			found = drill
+			break
+		end
+	end
+
+	if not found then
+		print("⚠️", category, "item not found:", name)
+		return
+	end
+
+	print("🔍 Checking:", found.Name)
+	print("🪙 Cost:", found.Cost, "| 💰 Cash:", cash)
+	print("🎯 Rebirths Needed:", found.RebirthsNeeded, "| 🔁 Yours:", rebirths)
+
+	if cash >= found.Cost and rebirths >= found.RebirthsNeeded then
+		print("✅ You can buy:", found.Name)
+	elseif rebirths < found.RebirthsNeeded and cash < found.Cost then
+		print("❌ Need more cash and rebirths")
+	elseif rebirths < found.RebirthsNeeded then
+		print("❌ Need more rebirths")
+	else
+		print("❌ Need more cash")
+	end
+end
+
+
+local SelectedItems = {
+	HandDrills = nil,
+	Storages = nil,
+	Drills = nil
+}
+
+ShopTab:CreateDropdown({
+	Name = "Storages",
+	Options = getDrillNames("Storages"),
+	CurrentOption = getDrillNames("Storages")[1] or "None",
+	MultipleOptions = false,
+	Flag = "StoragesSelect",
+	Callback = function(selected)
+		local name = typeof(selected) == "table" and selected[1] or selected
+		SelectedItems.Storages = name
+		checkDrillByName("Storages", name)
+	end
+})
+
+ShopTab:CreateDropdown({
+	Name = "Drills",
+	Options = getDrillNames("Drills"),
+	CurrentOption = getDrillNames("Drills")[1] or "None",
+	MultipleOptions = false,
+	Flag = "DrillSelect",
+	Callback = function(selected)
+		local name = typeof(selected) == "table" and selected[1] or selected
+		SelectedItems.Drills = name
+		checkDrillByName("Drills", name)
+	end
+})
+
+ShopTab:CreateDropdown({
+	Name = "HandDrills",
+	Options = getDrillNames("HandDrills"),
+	CurrentOption = getDrillNames("HandDrills")[1] or "None",
+	MultipleOptions = false,
+	Flag = "HandDrillSelect",
+	Callback = function(selected)
+		local name = typeof(selected) == "table" and selected[1] or selected
+		SelectedItems.HandDrills = name
+		checkDrillByName("HandDrills", name)
+	end
+})
+ShopTab:CreateSection("Auto Buy")
+
+
+
+
+local selectedCategory = "HandDrills"
+local autoBuyCooldown = 2
+local lastBuyTime = 0
+
+ShopTab:CreateDropdown({
+	Name = "Choose",
+	Options = {"HandDrills", "Storages", "Drills"},
+	CurrentOption = "HandDrills",
+	MultipleOptions = false,
+	Flag = "AutoBuyCategory",
+	Callback = function(selected)
+		selectedCategory = typeof(selected) == "table" and selected[1] or selected
+
+		if typeof(selectedCategory) ~= "string" then
+			warn("❌ Dropdown category invalid:", selected)
+			return
+		end
+
+		print("🛒 AutoBuy category set to:", selectedCategory)
+		print("")
+		
+		if not SelectedItems[selectedCategory] then
+			local default = getDrillNames(selectedCategory)[1]
+			if default then
+				SelectedItems[selectedCategory] = default
+				print("📌 Auto-filled:", default)
+			else
+				warn("⚠️ No available drills for:", selectedCategory)
+			end
+		end
+
+		local currentItem = SelectedItems[selectedCategory]
+		if currentItem then
+			print("📌 Selected item from Section 1:", currentItem)
+			checkDrillByName(selectedCategory, currentItem)
+		else
+			print("⚠️ Still no selected item for:", selectedCategory)
+		end
+	end
+})
+
+
+ShopTab:CreateToggle({
+	Name = "Auto Buy Selected",
+	CurrentValue = false,
+	Flag = "Autobuyoptions",
+	Callback = function(enabled)
+		if not enabled then
+			game:GetService("RunService"):UnbindFromRenderStep("AutoBuyLoop")
+			print("⛔ Auto Buy loop stopped")
+			return
+		end
+
+		print("✅ Auto Buy loop started")
+
+		game:GetService("RunService"):BindToRenderStep("AutoBuyLoop", Enum.RenderPriority.First.Value, function()
+			if typeof(selectedCategory) ~= "string" then return end
+
+			local currentItem = SelectedItems[selectedCategory]
+			if not currentItem then return end
+
+			if tick() - lastBuyTime >= autoBuyCooldown then
+				lastBuyTime = tick()
+				print("💸 Auto-buying:", currentItem, "in", selectedCategory)
+				checkDrillByName(selectedCategory, currentItem)
+			end
+		end)
+	end
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- === PLAYERS TAB ===
+local PlayersTab = Window:CreateTab("Players", PLAYERSIconID)
+
+local Players = game:GetService("Players")
+local PlayersTable = {}
+for _, player in ipairs(Players:GetPlayers()) do table.insert(PlayersTable, player.Name) end
+
+local Dropdown = PlayersTab:CreateDropdown({
+    Name = "AutoJoin",
+    Options = PlayersTable,
+    CurrentOption = nil,
+    MultipleOptions = false,
+    Flag = "AutoJoinPlayer",
+    Callback = function(selectedOption) print("Selected:", selectedOption) end
+})
+
+Players.PlayerAdded:Connect(function(player)
+    table.insert(PlayersTable, player.Name)
+    Dropdown:Refresh(PlayersTable, true)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    for i, name in ipairs(PlayersTable) do
+        if name == player.Name then table.remove(PlayersTable, i) break end
+    end
+    Dropdown:Refresh(PlayersTable, true)
+end)
+
+PlayersTab:CreateButton({Name = "Check Players", Callback = function()
+    local count = #game:GetService("Players"):GetPlayers()
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Missing Players",
+        Text = (count >= 4) and "There are enough players." or "Not enough players.",
+        Icon = "http://www.roblox.com/asset/?id=7314277630",
+        Duration = 1
+    })
+end})
+
+PlayersTab:CreateButton({Name = "Quick Fling", Callback = function() end})
+PlayersTab:CreateButton({Name = "Teleport", Callback = function() end})
+PlayersTab:CreateToggle({Name = "View", CurrentValue = false, Flag = "ViewTarget", Callback = function(v) end})
+PlayersTab:CreateToggle({Name = "Fling", CurrentValue = false, Flag = "FlingTarget", Callback = function(v) end})
+PlayersTab:CreateToggle({Name = "Headsit", CurrentValue = false, Flag = "Headsit", Callback = function(v) end})
+PlayersTab:CreateToggle({Name = "Kabang", CurrentValue = false, Flag = "Kabang", Callback = function(v) end})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rayfield:Notify({Title = "Notification Title", Content = "Notification Content", Duration = 6.5, Image = 10734941499})
+Rayfield:LoadConfiguration()
