@@ -1056,7 +1056,7 @@ local function useAvailableTotem()
 	end
 
 	if isHoldingCorrectTool() and not switchPause then
-		--UseTotemRemote:FireServer()
+		UseTotemRemote:FireServer()
 		print("✅ Used totem:", selectedTotemName)
 		task.delay(0.1, function()
 			Character.Humanoid:UnequipTools()
