@@ -529,9 +529,21 @@ local hideToggle = MainTab:CreateToggle({
 
 		if v then
 			print("🟢 Hide Players Plots ON")
+			local args = {
+				"[PERF] Minimum Ore UI popup",
+				"200000000"
+			}
+			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
+
 			hideCurrentUnownedPlots()
 		else
 			print("🔴 Hide Players Plots OFF")
+			local args = {
+				"[PERF] Minimum Ore UI popup",
+				"0"
+			}
+			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
+
 			unhideAllPlots()
 		end
 	end
@@ -1523,8 +1535,6 @@ TogglesTab:CreateToggle({
 		if enabled then
 			RunService:BindToRenderStep("Drill", 0, function()
 				DrillEvent:FireServer()
-				DrillEvent:FireServer()
-				DrillEvent:FireServer()
 			end)
 			print("🟢 Auto Drill ON")
 		else
@@ -1557,6 +1567,7 @@ TogglesTab:CreateToggle({
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local backpack = player:WaitForChild("Backpack")
 
@@ -1574,9 +1585,10 @@ local autoSellEnabled = false
 local sellDelay = 1.5
 local rarityThreshold = 1000
 local soldCache = {}
-local sellLoopRunning = false
+local lastSellTime = 0
+local toolIndex = 1 -- 🧠 only process one tool per frame
 
--- 🔍 Checks
+-- ❌ Filter out drills/tools you shouldn't sell
 local function isExcluded(tool)
 	if not tool:IsA("Tool") then return true end
 	if tool.Name:lower():find("drill") then return true end
@@ -1588,6 +1600,7 @@ local function isExcluded(tool)
 	return false
 end
 
+-- 🎯 Get tooltip chance like "1/1500"
 local function getTooltipChance(tool)
 	if not tool:IsA("Tool") then return nil end
 
@@ -1598,49 +1611,70 @@ local function getTooltipChance(tool)
 		tipString = tool.ToolTip.Value
 	end
 
-	if tipString and typeof(tipString) == "string" then
+	if tipString then
 		local currentStr, totalStr = string.match(tipString, "^(%d+)%s*/%s*([%d,]+)$")
 		if currentStr and totalStr then
 			local cleanTotal = totalStr:gsub(",", "")
-			local num = tonumber(cleanTotal)
-			return num or nil
+			return tonumber(cleanTotal)
 		end
 	end
 
 	return nil
 end
 
+-- 🔁 One-frame-safe selling loop
+local function renderSellStep()
+	if not autoSellEnabled then return end
+	if tick() - lastSellTime < sellDelay then return end
 
--- 🔁 Auto Sell Loop
-local function autoSellLoop()
-	if sellLoopRunning then return end
-	sellLoopRunning = true
-
-	while autoSellEnabled do
-		for _, tool in ipairs(backpack:GetChildren()) do
-			if tool:IsA("Tool") and not soldCache[tool] and not isExcluded(tool) then
-				local chance = getTooltipChance(tool)
-				if typeof(chance) == "number" and chance <= rarityThreshold then
-					sellRemote:FireServer(tool)
-					soldCache[tool] = true
-					print("💰 Sold:", tool.Name, "| Chance: 1/" .. tostring(chance))
-					break
-				end
-			end
-		end
-		task.wait(tonumber(sellDelay) or 1.5)
+	local tools = backpack:GetChildren()
+	if toolIndex > #tools then
+		toolIndex = 1
+		return
 	end
 
-	sellLoopRunning = false
+	local tool = tools[toolIndex]
+	toolIndex += 1
+
+	if tool and tool:IsA("Tool") and not soldCache[tool] and not isExcluded(tool) then
+		local chance = getTooltipChance(tool)
+		if typeof(chance) == "number" and chance <= rarityThreshold then
+			sellRemote:FireServer(tool)
+			soldCache[tool] = true
+			lastSellTime = tick()
+			--print("💰 Sold:", tool.Name, "| 1/" .. tostring(chance))
+		end
+	end
 end
 
-
+-- 🛑 Stop
 local function stopAutoSell()
 	autoSellEnabled = false
 	soldCache = {}
+	RunService:UnbindFromRenderStep("AutoSellStep")
 end
 
--- 🔘 Rayfield Toggle
+-- 🟢 Start
+local function startAutoSell()
+	autoSellEnabled = true
+	RunService:BindToRenderStep("AutoSellStep", Enum.RenderPriority.Last.Value, renderSellStep)
+end
+
+-- 🎚️ Live delay slider
+TogglesTab:CreateSlider({
+	Name = "Sell Delay (sec)",
+	Range = {0.1, 5},
+	Increment = 0.1,
+	Suffix = "s",
+	CurrentValue = 1.5,
+	Flag = "SellDelaySlider",
+	Callback = function(value)
+		sellDelay = value
+		--print("⏱️ Sell delay set to:", value)
+	end
+})
+
+-- 🔘 Rayfield toggle
 TogglesTab:CreateToggle({
 	Name = "Auto Sell",
 	CurrentValue = false,
@@ -1648,14 +1682,17 @@ TogglesTab:CreateToggle({
 	Callback = function(state)
 		if state then
 			print("🟢 Auto Sell Enabled")
-			autoSellEnabled = true
-			task.spawn(autoSellLoop)
+			startAutoSell()
 		else
 			print("🔴 Auto Sell Disabled")
 			stopAutoSell()
 		end
 	end
 })
+
+
+
+
 
 -- 🔤 Text Input (Rarity Threshold)
 TogglesTab:CreateInput({
@@ -1668,33 +1705,23 @@ TogglesTab:CreateInput({
 		local value = tonumber(cleaned)
 		if value and value > 0 then
 			rarityThreshold = value
-			print("📊 Updated Rarity Threshold → 1/" .. value)
+			--print("📊 Updated Rarity Threshold → 1/" .. value)
 		else
-			warn("⚠️ Invalid number input:", Text)
+			--warn("⚠️ Invalid number input:", Text)
 		end
 	end
 })
 
--- ⏱️ Sell Delay Slider
-TogglesTab:CreateSlider({
-	Name = "Sell Delay",
-	Range = {0.1, 10},
-	Increment = 0.1,
-	Suffix = "s",
-	CurrentValue = 1.5,
-	Flag = "SellDelay",
-	Callback = function(value)
-		sellDelay = tonumber(value)
-		print("⏱️ Sell Delay set to:", sellDelay, "seconds")
-	end
-})
+
+
+
+
+
 
 
 
 TogglesTab:CreateSection("Drills")
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
@@ -1705,17 +1732,70 @@ local autoCollectEnabled = false
 local drillDelay = 1.0
 local selectedTargets = {"Drills"}
 
--- 🔍 Get the local player's plot
+-- ✅ Optimized Get Local Player's Plot
+local cachedPlot = nil
 local function getPlayerPlot()
-	for _, plot in ipairs(workspace:WaitForChild("Plots"):GetChildren()) do
-		if plot:FindFirstChild("Owner") and plot.Owner.Value == player then
+	if cachedPlot and cachedPlot:FindFirstChild("Owner") and cachedPlot.Owner.Value == player then
+		return cachedPlot
+	end
+
+	local plotsFolder = workspace:FindFirstChild("Plots")
+	if not plotsFolder then return nil end
+
+	for _, plot in ipairs(plotsFolder:GetChildren()) do
+		if plot:IsA("Folder") and plot:FindFirstChild("Owner") and plot.Owner.Value == player then
+			cachedPlot = plot
 			return plot
 		end
 	end
+
 	return nil
 end
 
--- 🎯 Target dropdown
+-- 🔁 Safe Auto Collect Loop
+local function startAutoCollectLoop()
+	task.spawn(function()
+		while autoCollectEnabled do
+			local plot = getPlayerPlot()
+			if not plot then
+				task.wait(1)
+				continue
+			end
+
+			-- 🔁 Collect from Drills
+			if table.find(selectedTargets, "Drills") then
+				local drills = plot:FindFirstChild("Drills")
+				if drills then
+					for _, drill in ipairs(drills:GetChildren()) do
+						if not autoCollectEnabled then return end
+						if drill:IsA("Model") or drill:IsA("BasePart") then
+							CollectDrillRE:FireServer(drill)
+							task.wait(drillDelay)
+						end
+					end
+				end
+			end
+
+			-- 💰 Collect from Storages
+			if table.find(selectedTargets, "Storages") then
+				local storage = plot:FindFirstChild("Storage")
+				if storage then
+					for _, bin in ipairs(storage:GetChildren()) do
+						if not autoCollectEnabled then return end
+						if bin:IsA("Model") or bin:IsA("BasePart") then
+							CollectDrillRE:FireServer(bin)
+							task.wait(drillDelay)
+						end
+					end
+				end
+			end
+
+			task.wait(drillDelay) -- delay before next full loop
+		end
+	end)
+end
+
+-- 🎯 Dropdown Target Selector
 TogglesTab:CreateDropdown({
 	Name = "Auto Collect Target",
 	Options = {"Drills", "Storages"},
@@ -1727,8 +1807,20 @@ TogglesTab:CreateDropdown({
 		print("🎯 Auto Collect set to:", table.concat(selectedTargets, ", "))
 	end
 })
+TogglesTab:CreateSlider({
+	Name = "Collect Speed (sec)",
+	Range = {0.1, 50}, -- You can adjust min/max as needed
+	Increment = 0.1,
+	Suffix = "s",
+	CurrentValue = 1.0,
+	Flag = "CollectSpeedSlider",
+	Callback = function(value)
+		drillDelay = value
+		print("⏱️ Collect delay set to:", value, "seconds")
+	end
+})
 
--- 🔁 Toggle
+-- 🔁 Main Toggle
 TogglesTab:CreateToggle({
 	Name = "Auto Collect",
 	CurrentValue = false,
@@ -1743,62 +1835,14 @@ TogglesTab:CreateToggle({
 
 		if enabled then
 			print("🟢 Auto Collect ENABLED")
-			RunService:BindToRenderStep("UnifiedAutoCollect", Enum.RenderPriority.Last.Value, function()
-				if not autoCollectEnabled then return end
-
-				local plot = getPlayerPlot()
-				if not plot then return end
-
-				-- 🔁 Collect from Drills
-				if table.find(selectedTargets, "Drills") then
-					local drills = plot:FindFirstChild("Drills")
-					if drills then
-						for _, drill in ipairs(drills:GetChildren()) do
-							if not autoCollectEnabled then break end
-							task.spawn(function()
-								CollectDrillRE:FireServer(drill)
-								print("🔁 Collected from Drill:", drill.Name)
-							end)
-							task.wait(drillDelay)
-						end
-					end
-				end
-
-				-- 💰 Collect from Storages
-				if table.find(selectedTargets, "Storages") then
-					local storage = plot:FindFirstChild("Storage")
-					if storage then
-						for _, bin in ipairs(storage:GetChildren()) do
-							if not autoCollectEnabled then break end
-							task.spawn(function()
-								CollectDrillRE:FireServer(bin)
-								print("💰 Collected from Storage:", bin.Name)
-							end)
-							task.wait(drillDelay)
-						end
-					end
-				end
-			end)
+			startAutoCollectLoop()
 		else
 			print("🔴 Auto Collect DISABLED")
-			RunService:UnbindFromRenderStep("UnifiedAutoCollect")
+			-- loop will end automatically
 		end
 	end
 })
 
--- ⏱️ Speed slider
-TogglesTab:CreateSlider({
-	Name = "Collect Speed",
-	Range = {0.1, 5},
-	Increment = 0.1,
-	Suffix = "s",
-	CurrentValue = drillDelay,
-	Flag = "DrillDelay",
-	Callback = function(v)
-		drillDelay = v
-		print("⏱️ Collect delay set to:", drillDelay)
-	end
-})
 
 
 
