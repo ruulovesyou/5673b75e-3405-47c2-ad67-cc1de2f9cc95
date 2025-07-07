@@ -529,20 +529,10 @@ local hideToggle = MainTab:CreateToggle({
 
 		if v then
 			print("🟢 Hide Players Plots ON")
-			local args = {
-				"[PERF] Minimum Ore UI popup",
-				"200000000"
-			}
-			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
 
 			hideCurrentUnownedPlots()
 		else
 			print("🔴 Hide Players Plots OFF")
-			local args = {
-				"[PERF] Minimum Ore UI popup",
-				"0"
-			}
-			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
 
 			unhideAllPlots()
 		end
@@ -652,9 +642,21 @@ local oreToggle = MainTab:CreateToggle({
 		hidingOre = v
 		if v then
 			print("🟢 [Ore] Hiding RenderStep ON")
+			local args = {
+				"[PERF] Minimum Ore UI popup",
+				"2000000000"
+			}
+			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
+
 			bindOreRender()
 		else
 			print("🔴 [Ore] Hiding RenderStep OFF")
+			local args = {
+				"[PERF] Minimum Ore UI popup",
+				"0"
+			}
+			game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("SettingsService"):WaitForChild("RF"):WaitForChild("SettingUpdated"):InvokeServer(unpack(args))
+
 			unbindOreRender()
 		end
 	end
@@ -1069,7 +1071,7 @@ local function useAvailableTotem()
 
 	if isHoldingCorrectTool() and not switchPause then
 		UseTotemRemote:FireServer()
-		print("✅ Used totem:", selectedTotemName)
+		--print("✅ Used totem:", selectedTotemName)
 		task.delay(0.1, function()
 			Character.Humanoid:UnequipTools()
 			print("🧼 Unequipped totem after use.")
@@ -1976,9 +1978,23 @@ for _, recipe in ipairs(CraftingRecipes) do
 	end
 end
 
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-ShopTab:CreateDropdown({Name = "Craft",Options = craftableItems,CurrentOption = craftableItems[1], MultipleOptions = false, Flag = "Crafting", Callback = function(selected)
-		local selectedRecipe
+-- 🌟 Synced recipe selection
+local selectedRecipe = nil
+local autoCraftEnabled = false
+local lastCraftTime = 0
+local craftCooldown = 1.0 -- Delay between crafts (in seconds)
+
+-- 📥 Dropdown to pick recipe
+ShopTab:CreateDropdown({
+	Name = "Craft",
+	Options = craftableItems,
+	CurrentOption = craftableItems[1],
+	MultipleOptions = false,
+	Flag = "Crafting",
+	Callback = function(selected)
 		if typeof(selected) == "table" then
 			selectedRecipe = selected[1]
 		else
@@ -1989,34 +2005,57 @@ ShopTab:CreateDropdown({Name = "Craft",Options = craftableItems,CurrentOption = 
 	end
 })
 
+-- 🛠 Crafting logic per frame
+local function renderCraftLoop()
+	if not autoCraftEnabled then return end
+	if not selectedRecipe then return end
+
+	if tick() - lastCraftTime >= craftCooldown then
+		lastCraftTime = tick()
+		local args = { selectedRecipe }
+
+		ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+			:WaitForChild("Services"):WaitForChild("OreService")
+			:WaitForChild("RF"):WaitForChild("CraftItem")
+			:InvokeServer(unpack(args))
+
+		print("⚒️ Crafted:", selectedRecipe)
+	end
+end
+
+-- 🟢 Toggle to control auto crafting
+ShopTab:CreateToggle({
+	Name = "AutoCraft",
+	CurrentValue = false,
+	Flag = "AutoCraft",
+	Callback = function(v)
+		autoCraftEnabled = v
+
+		if v then
+			print("🟢 AutoCraft Enabled")
+			RunService:BindToRenderStep("AutoCraftStep", Enum.RenderPriority.Last.Value, renderCraftLoop)
+		else
+			print("🔴 AutoCraft Disabled")
+			RunService:UnbindFromRenderStep("AutoCraftStep")
+		end
+	end
+})
 
 
-ShopTab:CreateToggle({Name = "AutoCraft", CurrentValue = false, Flag = "AutoCraft", Callback = function(v) end})
---[[
-
-local args = {
-	"Reinforced Drill"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyDrill"):FireServer(unpack(args))
-
-
-local args = {
-	"Standard Vault"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyDrill"):FireServer(unpack(args))
-local args = {
-	"Reinforced Hand Drill"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE"):WaitForChild("BuyHandDrill"):FireServer(unpack(args))
-local args = {
-	"Weak Luck Potion"
-}
-game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RF"):WaitForChild("CraftItem"):InvokeServer(unpack(args))
 
 
 
 
-]]
+
+
+
+
+
+
+
+
+
+
 ShopTab:CreateSection("Auto Buy Options")
 
 -- ✅ CLEAN + SMART VERSION (Filters out names in CraftingRecipes + Caches results)
@@ -2232,42 +2271,80 @@ ShopTab:CreateDropdown({
 })
 
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local lastBuyTime = 0
+local autoBuyCooldown = 1.0 -- Live delay from slider
+
+-- 🔧 Purchase Speed Slider
+ShopTab:CreateSlider({
+	Name = "Purchase Speed",
+	Range = {0.1, 5},
+	Increment = 0.1,
+	Suffix = "s",
+	CurrentValue = 1.0,
+	Flag = "PurchaseSpeedSlider",
+	Callback = function(value)
+		autoBuyCooldown = value
+		print("⏱️ Purchase delay set to:", value, "seconds")
+
+		if value <= 0.5 then
+			print("⚡ Speed: Ultra Fast")
+		elseif value <= 1 then
+			print("🚀 Speed: Fast")
+		elseif value <= 2 then
+			print("🏃 Speed: Normal")
+		else
+			print("🐢 Speed: Slow")
+		end
+	end
+})
+
+-- 🔁 Auto Buy Toggle
 ShopTab:CreateToggle({
 	Name = "Auto Buy Selected",
 	CurrentValue = false,
 	Flag = "Autobuyoptions",
 	Callback = function(enabled)
 		if not enabled then
-			game:GetService("RunService"):UnbindFromRenderStep("AutoBuyLoop")
+			RunService:UnbindFromRenderStep("AutoBuyLoop")
 			print("⛔ Auto Buy loop stopped")
 			return
 		end
 
 		print("✅ Auto Buy loop started")
 
-		game:GetService("RunService"):BindToRenderStep("AutoBuyLoop", Enum.RenderPriority.First.Value, function()
+		RunService:BindToRenderStep("AutoBuyLoop", Enum.RenderPriority.First.Value, function()
 			if typeof(selectedCategory) ~= "string" then return end
 
-			local currentItem = SelectedItems[selectedCategory]
-			if not currentItem then return end
+			local itemName = SelectedItems[selectedCategory]
+			if not itemName then return end
 
-			if tick() - lastBuyTime >= autoBuyCooldown then
-				lastBuyTime = tick()
-				print("💸 Auto-buying:", currentItem, "in", selectedCategory)
-				checkDrillByName(selectedCategory, currentItem)
+			if tick() - lastBuyTime < autoBuyCooldown then return end
+			lastBuyTime = tick()
+
+			local oreService = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit")
+				:WaitForChild("Services"):WaitForChild("OreService"):WaitForChild("RE")
+
+			if selectedCategory == "Drills" or selectedCategory == "Storages" then
+				local remote = oreService:FindFirstChild("BuyDrill")
+				if remote then
+					remote:FireServer(itemName)
+					--print("💸 Bought from Drills/Storages:", itemName)
+				end
+			elseif selectedCategory == "HandDrills" then
+				local remote = oreService:FindFirstChild("BuyHandDrill")
+				if remote then
+					remote:FireServer(itemName)
+					--print("🤲 Bought from HandDrills:", itemName)
+				end
+			else
+				warn("⚠️ Unknown category:", selectedCategory)
 			end
 		end)
 	end
 })
-
-
-
-
-
-
-
-
-
 
 
 
